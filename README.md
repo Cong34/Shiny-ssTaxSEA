@@ -54,4 +54,4 @@ Open `app.R` and click **Run App**.
 ## Acknowledgements
 
 Built upon [TaxSEA](https://github.com/feargalr/TaxSEA) by Feargal Ryan.
-The skeleton of the [Shiny-ssTaxSEA](https://github.com/timrankin/Shiny-TaxSEA) was built by Tim Rankin
+The skeleton of the Shiny-ssTaxSEA was built by Tim Rankin at [Shiny-TaxSEA](https://github.com/timrankin/Shiny-TaxSEA)
