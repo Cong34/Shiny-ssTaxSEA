@@ -9,7 +9,7 @@ A Shiny frontend for [TaxSEA: Taxon Set Enrichment Analysis](https://github.com/
 
 ## Quick Start
 
-Open the app and run the built-in **test data** to explore the interface — plots update interactively as you select taxa in the table.
+Open the app and run the built-in **test data** to explore the interface — plots update interactively as you select taxa in the table. Just click on **Analyse sample data** and toggle between TaxSEA and ssTaxSEA.
 
 ### Input: TaxSEA
 
