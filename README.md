@@ -2,6 +2,7 @@
 Shiny-TaxSEA is a Shiny frontend to [TaxSEA: Taxon Set Enrichment Analysis](https://github.com/feargalr/TaxSEA)
 And Shiny-ssTaxSEA is an updated to Shiny-TaxSEA, with TaxSEA version 1.4.0, inclusion of single sample TaxSEA. 
 
+ssTaxSEA is available on Bioconductor current version. <https://bioconductor.org/packages/devel/bioc/vignettes/TaxSEA/inst/doc/single-sample-enrichment.html>
 
 ## Quick Start
 
