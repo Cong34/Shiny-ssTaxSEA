@@ -3,7 +3,7 @@
 A Shiny frontend for [TaxSEA: Taxon Set Enrichment Analysis](https://github.com/feargalr/TaxSEA), extended with **single-sample TaxSEA (ssTaxSEA)** support and updated to TaxSEA v1.4.0.
 
 > **ssTaxSEA** is available on Bioconductor:
-> [Single-sample enrichment vignette](https://bioconductor.org/packages/devel/bioc/vignettes/TaxSEA/inst/doc/single-sample-enrichment.html)
+> [Single-sample Taxon Enrichment Analysis](https://bioconductor.org/packages/devel/bioc/vignettes/TaxSEA/inst/doc/single-sample-enrichment.html)
 
 ---
 
