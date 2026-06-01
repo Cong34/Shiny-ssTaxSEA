@@ -44,10 +44,7 @@ install.packages("devtools")
 library(devtools)
 install_github("feargalr/TaxSEA")
 
-install.packages(c(
-  'shiny', 'tidyverse', 'ggrepel',
-  'bslib', 'bsicons', 'openxlsx2', 'DT'
-))
+install.packages(c('shiny', 'tidyverse', 'ggrepel', 'bslib', 'bsicons', 'openxlsx2', 'DT'))
 ```
 
 Open `app.R` and click **Run App**.
