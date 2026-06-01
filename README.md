@@ -14,13 +14,10 @@ Open the app and run the built-in **test data** to explore the interface — plo
 ### Input: TaxSEA
 
 Supply a `.csv` or `.xlsx` file with **4 columns in this order**:
-
-| Column | Description | Example |
-|--------|-------------|---------|
-| 1 | Taxa name | *Bacteroides fragilis* |
-| 2 | Rank score | log2 fold change |
-| 3 | P value | 0.03 |
-| 4 | Padj (FDR) | 0.05 |
+- Taxa (e.g. species/genus)
+- rank (e.g. log2 fold changes)
+- P value
+- Padj (FDR)
 
 > Column headers are ignored — **column order matters**.
 
