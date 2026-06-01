@@ -7,16 +7,6 @@ A Shiny frontend for [TaxSEA: Taxon Set Enrichment Analysis](https://github.com/
 
 ---
 
-## Features
-
-- Interactive Shiny interface for TaxSEA differential abundance enrichment
-- Single-sample TaxSEA (ssTaxSEA) analysis
-- Upload your own `.csv` or `.xlsx` data
-- Dynamic plots that update as you select up to 8 taxa
-- Downloadable test data to check expected input format
-
----
-
 ## Quick Start
 
 Open the app and run the built-in **test data** to explore the interface — plots update interactively as you select taxa in the table.
