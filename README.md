@@ -1,5 +1,7 @@
-# Shiny-TaxSEA
+# Shiny-ssTaxSEA
 Shiny-TaxSEA is a Shiny frontend to [TaxSEA: Taxon Set Enrichment Analysis](https://github.com/feargalr/TaxSEA)
+And Shiny-ssTaxSEA is an updated to Shiny-TaxSEA, with TaxSEA version 1.4.0, inclusion of single sample TaxSEA. 
+
 
 ## Quick Start
 Access at <https://shiny.taxsea.app>
@@ -11,7 +13,7 @@ When you're ready to analyse your own data, supply a .csv or .xlsx file with the
 ## Running locally
 The project is not packaged nicely yet, so to run it locally clone the repository:
 ```
-git clone https://github.com/timrankin/Shiny-TaxSEA
+git clone https://github.com/Cong34/Shiny-ssTaxSEA
 ```
 
 Then open the project `Shiny-TaxSEA.Rproj` in RStudio and install dependencies:
