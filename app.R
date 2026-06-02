@@ -516,44 +516,33 @@ server <- function(input, output, session) {
       results <- TaxSEA(taxonRanks)
       
       # This function write the most important taxon sets and output in a name list as custom_db for ssTaxSEA
-      write_important_taxonset <- function( df , x) {
-        # df is the input TaxSEA results
-        # x is the total of important taxa extract needed.
-        
-        # df <- subset(df, PValue < 0.05) # make sure data is statistically significant.
-        
-        # Important list must include significant results,
-        high_list <- head(df[order(-df$median_rank_of_set_members), "taxonSetName"], x)    # meaning highest median results
-        low_list  <- head(df[order( df$median_rank_of_set_members), "taxonSetName"], x)    # and also lowest median results.
-        important_list <- c(high_list, low_list)
-        
-        df_important <- subset(df, taxonSetName %in% important_list)
-        
-        named_list <- setNames(
-          lapply(df_important$TaxonSet, function(taxa_string) {
-            strsplit(taxa_string, ", ")[[1]]
-          }),
-          df_important$taxonSetName
+      write_taxonset <- function(df) {
+        Taxa_list <- setNames(lapply(df$TaxonSet, function(taxa_string) {
+          strsplit(taxa_string, ", ")[[1]]
+        }),
+        df$taxonSetName
         )
-        return(named_list) #The output is a namelist of important taxonsets and all of the bacteria taxa
+        # Clean up taxon set names to match TaxSEA style
+        names(Taxa_list) <- names(Taxa_list) %>%
+          str_replace("_(.)", ": \\1") %>%
+          str_replace("(: )(.)", toupper) %>%
+          str_replace_all("_", " ")
+        return(Taxa_list) #The output is a namelist of important taxonsets and all of the bacteria taxa
       }
       
-      metabolites_db  <- write_important_taxonset(results$Metabolite_producers, input$taxon_sets_amount)
-      disease_db      <- write_important_taxonset(results$Health_associations, input$taxon_sets_amount)
-      bacdive_db      <- write_important_taxonset(results$BacDive_bacterial_physiology, input$taxon_sets_amount)
-      
-      
-      print(length(metabolites_db))
-      print(length(disease_db))
-      print(length(bacdive_db))
+      metabolites_db  <- write_taxonset(results$Metabolite_producers)
+      disease_db      <- write_taxonset(results$Health_associations)
+      bacdive_db      <- write_taxonset(results$BacDive_bacterial_physiology)
       # Bugsig is not included. 
-
+      
       ssTaxSEA_metabolites <- ssTaxSEA(counts = count_df, custom_db = metabolites_db)
-      print(colnames(ssTaxSEA_metabolites$scores))
       ssTaxSEA_disease     <- ssTaxSEA(counts = count_df, custom_db = disease_db)
-      print(colnames(ssTaxSEA_disease$scores))
       ssTaxSEA_bacdive     <- ssTaxSEA(counts = count_df, custom_db = bacdive_db)
-      print(colnames(ssTaxSEA_bacdive$scores))
+
+      # ssTaxSEA_metabolites_cuttoff <- Significant_TaxonSets_cutoff(results$Metabolite_producers, ssTaxSEA_metabolites, input$taxon_sets_amount)
+      # ssTaxSEA_disease_cuttoff     <- Significant_TaxonSets_cutoff(results$Health_associations, ssTaxSEA_disease, input$taxon_sets_amount)
+      # ssTaxSEA_bacdive_cuttoff     <- Significant_TaxonSets_cutoff(results$BacDive_bacterial_physiology, ssTaxSEA_bacdive, input$taxon_sets_amount)
+      # 
       Results <- list(ssTaxSEA_metabolites$scores, ssTaxSEA_disease$scores, ssTaxSEA_bacdive$scores)
       names(Results) <- c("Metabolite_producers", "Health_associations", "BacDive_bacterial_physiology")
       return(Results)
@@ -563,16 +552,25 @@ server <- function(input, output, session) {
   # Render the data table
   output$table2 = DT::renderDataTable({
     req(sstaxseaResults())
-    # Use the same database_selection input as TaxSEA tab
-    display_df <- sstaxseaResults()[[input$database_selection]]
-
-    display_df <- as.data.frame(t(display_df))
+    req(taxseaResults())
     
-    # Clean up taxon set names to match TaxSEA style
-    rownames(display_df) <- rownames(display_df) %>%
-      str_replace("_(.)", ": \\1") %>%
-      str_replace("(: )(.)", toupper) %>%
-      str_replace_all("_", " ")
+    Significant_TaxonSets_cutoff <- function(TaxSEA_res, ssTaxSEA_res, x) {
+      df_high <- TaxSEA_res[order(TaxSEA_res$`P Value`, decreasing = FALSE),]
+      df_cutoff <- head(df_high, x)
+      list_cutoff <- df_cutoff$`Taxon Set`
+
+      ssTaxSEA_res <- ssTaxSEA_res[,colnames(ssTaxSEA_res) %in% list_cutoff]
+      return(ssTaxSEA_res)
+    }
+    
+    # Use the same database_selection input as TaxSEA tab
+    ssTaxSEA_score <- sstaxseaResults()[[input$database_selection]]
+    TaxSEA_res     <- taxseaResults()[[input$database_selection]]
+    display_res <- Significant_TaxonSets_cutoff(TaxSEA_res, ssTaxSEA_score, input$taxon_sets_amount)
+    
+
+    display_df <- as.data.frame(t(display_res))
+    
     
     col_indices <- seq_len(ncol(display_df)) + 1
     
@@ -599,14 +597,24 @@ server <- function(input, output, session) {
     return(table2)
   })
   
-
-  
-  
   heatmapPlot <- reactive({
     req(sstaxseaResults())
+    req(taxseaResults())
     
-    scores <- sstaxseaResults()[[input$database_selection]]
-    scores <- t(scores)
+    Significant_TaxonSets_cutoff <- function(TaxSEA_res, ssTaxSEA_res, x) {
+      df_high <- TaxSEA_res[order(TaxSEA_res$`P Value`, decreasing = FALSE),]
+      df_cutoff <- head(df_high, x)
+      list_cutoff <- df_cutoff$`Taxon Set`
+
+      ssTaxSEA_res <- ssTaxSEA_res[,colnames(ssTaxSEA_res) %in% list_cutoff]
+      return(ssTaxSEA_res)
+    }
+    
+    ssTaxSEA_score <- sstaxseaResults()[[input$database_selection]]
+    TaxSEA_res     <- taxseaResults()[[input$database_selection]]
+    
+    display_res <- Significant_TaxonSets_cutoff(TaxSEA_res, ssTaxSEA_score, input$taxon_sets_amount)
+    scores <- t(display_res)
     
     rownames(scores) <- rownames(scores) %>%
       str_replace("_(.)", ": \\1") %>%
@@ -634,6 +642,7 @@ server <- function(input, output, session) {
       column_title_side = "bottom",
       show_column_dend  = TRUE,
       column_names_rot  = 45,
+      column_names_gp = gpar(fontsize = 10),
       
       # Clustering: 
       row_dend_side = "right",
@@ -646,9 +655,7 @@ server <- function(input, output, session) {
         title = "Enrichment Score",
         direction = "vertical",
         at = c(floor(min(scores)), 0, ceiling(max(scores)))
-      )
-      
-      )
+      ))
     return(ht)
   })
   ##############################################################################
