@@ -539,10 +539,6 @@ server <- function(input, output, session) {
       ssTaxSEA_disease     <- ssTaxSEA(counts = count_df, custom_db = disease_db)
       ssTaxSEA_bacdive     <- ssTaxSEA(counts = count_df, custom_db = bacdive_db)
 
-      # ssTaxSEA_metabolites_cuttoff <- Significant_TaxonSets_cutoff(results$Metabolite_producers, ssTaxSEA_metabolites, input$taxon_sets_amount)
-      # ssTaxSEA_disease_cuttoff     <- Significant_TaxonSets_cutoff(results$Health_associations, ssTaxSEA_disease, input$taxon_sets_amount)
-      # ssTaxSEA_bacdive_cuttoff     <- Significant_TaxonSets_cutoff(results$BacDive_bacterial_physiology, ssTaxSEA_bacdive, input$taxon_sets_amount)
-      # 
       Results <- list(ssTaxSEA_metabolites$scores, ssTaxSEA_disease$scores, ssTaxSEA_bacdive$scores)
       names(Results) <- c("Metabolite_producers", "Health_associations", "BacDive_bacterial_physiology")
       return(Results)
